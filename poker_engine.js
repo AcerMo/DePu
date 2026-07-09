@@ -613,7 +613,7 @@ class PokerGame {
             round_name: this.round_name,
             current_bet: this.current_bet,
             min_raise: this.min_raise,
-            total_pot: total_pot,
+            total_pot: totalPot,
             winners: this.winners,
             win_messages: this.win_messages,
             history: this.history
