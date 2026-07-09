@@ -157,6 +157,15 @@ function hostBroadcastChat(sender, msg) {
     });
 }
 
+// 房主给特定 Peer 发送错误提示（支持房主本地提示）
+function sendErrorToPeer(peerId, errMsg) {
+    if (peerId === "local-host") {
+        showToast(errMsg);
+    } else if (clientConnections[peerId]) {
+        clientConnections[peerId].send({ type: "error", message: errMsg });
+    }
+}
+
 // 房主处理接收到的客户端消息
 function hostHandleClientMessage(peerId, packet) {
     if (!isHost || !pokerGame) return;
@@ -179,7 +188,7 @@ function hostHandleClientMessage(peerId, packet) {
             seatToPeer[targetSeat] = peerId;
             hostBroadcastState();
         } else {
-            clientConnections[peerId].send({ type: "error", message: "该座位已被占用" });
+            sendErrorToPeer(peerId, "该座位已被占用");
         }
     } 
     else if (action === "stand") {
@@ -196,7 +205,7 @@ function hostHandleClientMessage(peerId, packet) {
             hostBroadcastChat("系统", "游戏已由玩家启动！");
             hostBroadcastState();
         } else {
-            clientConnections[peerId].send({ type: "error", message: "无法启动游戏，至少需要2名有筹码的玩家" });
+            sendErrorToPeer(peerId, "无法启动游戏，至少需要2名有筹码的玩家");
         }
     } 
     else if (["fold", "check", "call", "raise"].includes(action)) {
@@ -219,7 +228,7 @@ function hostHandleClientMessage(peerId, packet) {
                     }, 5000);
                 }
             } else {
-                clientConnections[peerId].send({ type: "error", message: err_msg });
+                sendErrorToPeer(peerId, err_msg);
             }
         }
     } 
