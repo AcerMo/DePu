@@ -537,8 +537,12 @@ class PokerGame {
 
         this.current_turn = this.getNextSeat(this.dealer_idx, ["playing"]);
         this.last_raiser = -1;
-        if (this.seats[this.current_turn].status !== "playing") {
-            this.advanceRound();
+        
+        const turnPlayer = this.seats[this.current_turn];
+        if (!turnPlayer || turnPlayer.status !== "playing") {
+            if (!["showdown", "ended", "waiting"].includes(this.round_name)) {
+                this.advanceRound();
+            }
         }
     }
 

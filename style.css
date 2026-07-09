@@ -307,8 +307,9 @@ body, html {
 }
 
 .card-placeholder {
-    border: 1px dashed rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.02);
+    border: 1.5px dashed rgba(255,255,255,0.25);
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 /* 扑克牌设计 */
@@ -1056,29 +1057,16 @@ body, html {
     line-height: 0.8 !important;
 }
 
-/* 我的手牌 - 大牌专属悬浮展示区 */
-.my-hand-display {
-    position: absolute;
-    bottom: 115px;
-    left: 16px;
-    z-index: 150;
-    padding: 10px 14px;
-    border-radius: 16px;
+/* 我的手牌 - 内嵌式信息状态条 */
+.my-hand-panel-inline {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(15, 23, 42, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 6px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(15, 23, 42, 0.4);
 }
 
 .my-hand-title {
@@ -1089,24 +1077,24 @@ body, html {
     font-weight: 700;
 }
 
-.my-hand-cards-container {
+.my-hand-cards-container-inline {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
-/* 大牌型卡槽大小 */
+/* 牌槽大小（内联显示，紧凑防遮挡） */
 .card-slot.large {
     position: relative;
-    width: 58px;
-    height: 82px;
+    width: 32px;
+    height: 46px;
     perspective: 500px;
 }
 
 .card-slot.large .poker-card {
-    border-radius: 8px !important;
-    padding: 6px !important;
-    font-size: 1.1rem !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3) !important;
+    border-radius: 4px !important;
+    padding: 3px !important;
+    font-size: 0.75rem !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -1115,23 +1103,22 @@ body, html {
 }
 
 .card-slot.large .poker-card .card-suit-big {
-    font-size: 1.8rem !important;
-    margin-bottom: 8px !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 2px !important;
 }
 
 .card-slot.large .poker-card .card-corner {
-    line-height: 0.95 !important;
+    line-height: 0.8 !important;
 }
 
 /* 手牌智能牌型指示徽章 */
-.my-hand-value-badge {
+.my-hand-value-badge-inline {
     background: linear-gradient(135deg, var(--primary) 0%, #d97706 100%);
     color: #000;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 800;
-    padding: 3px 12px;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
-    text-shadow: 0 0.5px 1px rgba(255,255,255,0.2);
+    padding: 2px 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
 }
 
