@@ -231,9 +231,11 @@ function hostHandleClientMessage(peerId, packet) {
         }
     } 
     else if (["fold", "check", "call", "raise"].includes(action)) {
+        appendChat("系统调试", `房主收到行动: [${action}], 执行人 peerId: ${peerId}, 映射位置 seatIdx: ${seatIdx}`);
         if (seatIdx !== -1) {
             const amount = packet.amount || 0;
             const [success, err_msg] = pokerGame.playerAction(seatIdx, action, amount);
+            appendChat("系统调试", `执行结果 success: ${success}, 消息: ${err_msg}`);
             if (success) {
                 hostBroadcastState();
                 
@@ -252,6 +254,8 @@ function hostHandleClientMessage(peerId, packet) {
             } else {
                 sendErrorToPeer(peerId, err_msg);
             }
+        } else {
+            appendChat("系统调试", `警告：行动执行人位置为 -1，已被房主抛弃！`);
         }
     } 
     else if (action === "buy_in") {
@@ -784,6 +788,7 @@ function rebuyChips() {
 }
 
 function sendPlayerAction(actionType, amount = 0) {
+    appendChat("系统调试", `点击行动: [${actionType}], 下注量: ${amount}, 你的Seat位置: ${yourSeatIdx}, 当前Turn行动位置: ${localGameState ? localGameState.current_turn : '无'}`);
     sendMessageToHost({ action: actionType, amount: amount });
 }
 
