@@ -16,6 +16,18 @@ let currentUsername = "";
 let yourSeatIdx = -1;
 let localGameState = null;
 
+// 全局捕获 JavaScript 运行异常并输出到日志，方便用户排查
+window.onerror = function(message, source, lineno, colno, error) {
+    const errorMsg = `JS异常: ${message} (在 ${source.split('/').pop()}:${lineno}:${colno})`;
+    console.error(errorMsg);
+    // 强制打印在游戏日志和聊天室中
+    setTimeout(() => {
+        appendChat("系统错误", errorMsg);
+        showToast("检测到JS脚本错误，请查看日志");
+    }, 500);
+    return false;
+};
+
 // Host 端独有变量
 let pokerGame = null;       // 德州扑克引擎实例
 let clientConnections = {}; // peerId -> DataConnection 映射
@@ -306,9 +318,10 @@ function joinRoom() {
             const clientPeerId = conn.peer;
             clientConnections[clientPeerId] = conn;
             peerToSeat[clientPeerId] = -1; // 默认是旁观
+            appendChat("系统", "检测到远程客户端正在尝试接入直连...");
 
             conn.on("open", () => {
-                // 连接成功打开
+                appendChat("系统", `与客户端 ${clientPeerId} 数据直连通道开启！`);
             });
 
             conn.on("data", (packet) => {
@@ -338,6 +351,7 @@ function joinRoom() {
 
             conn.on("error", (err) => {
                 console.error("连接通道故障:", err);
+                appendChat("系统", `与客户端的通道发生异常: ${err.message}`);
             });
         });
     });
@@ -349,6 +363,7 @@ function joinRoom() {
             setupAsClient(hostPeerId);
         } else {
             showToast(`连接故障: ${err.type}`);
+            appendChat("系统", `房主注册失败: ${err.type}`);
             const statusBadge = document.getElementById("connection-status");
             if (statusBadge) {
                 statusBadge.textContent = "连接失败";
@@ -371,6 +386,7 @@ function setupAsClient(hostPeerId) {
             statusBadge.textContent = "正在连接房主...";
             statusBadge.className = "connection-status-badge";
         }
+        appendChat("系统", `我的临时ID为 ${id}，正在尝试直连房主...`);
 
         hostConnection = peer.connect(hostPeerId);
 
@@ -385,6 +401,7 @@ function setupAsClient(hostPeerId) {
                 statusBadge.textContent = "已联机 (客端)";
                 statusBadge.className = "connection-status-badge client";
             }
+            appendChat("系统", "连接成功！正在向房主投递加入请求...");
 
             // 发送加入消息
             hostConnection.send({ type: "join", name: currentUsername });
