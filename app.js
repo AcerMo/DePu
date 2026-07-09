@@ -1,4 +1,14 @@
 // 全局 P2P 联机状态
+const peerConfig = {
+    config: {
+        iceServers: [
+            { urls: 'stun:stun.miwifi.com:3478' },
+            { urls: 'stun:stun.qq.com:3478' },
+            { urls: 'stun:stun.l.google.com:19302' }
+        ]
+    }
+};
+
 let peer = null;
 let isHost = false;
 let currentRoomId = "";
@@ -267,7 +277,7 @@ function joinRoom() {
     showToast("正在连接网络对局中...");
 
     // 1. 尝试以“房主”身份建立连接
-    peer = new Peer(hostPeerId);
+    peer = new Peer(hostPeerId, peerConfig);
 
     peer.on("open", (id) => {
         // 成功以房主身份创建了房间
@@ -279,6 +289,13 @@ function joinRoom() {
         lobbyScreen.classList.remove("active");
         gameScreen.classList.add("active");
         displayRoomId.textContent = roomId;
+        
+        // 更新连接状态徽章
+        const statusBadge = document.getElementById("connection-status");
+        if (statusBadge) {
+            statusBadge.textContent = "已联机 (房主)";
+            statusBadge.className = "connection-status-badge host";
+        }
         
         // 房主本地初始化状态并渲染
         localGameState = pokerGame.toDict(null);
@@ -318,6 +335,10 @@ function joinRoom() {
                 hostBroadcastChat("系统", `${name} 离开了房间`);
                 hostBroadcastState();
             });
+
+            conn.on("error", (err) => {
+                console.error("连接通道故障:", err);
+            });
         });
     });
 
@@ -328,6 +349,11 @@ function joinRoom() {
             setupAsClient(hostPeerId);
         } else {
             showToast(`连接故障: ${err.type}`);
+            const statusBadge = document.getElementById("connection-status");
+            if (statusBadge) {
+                statusBadge.textContent = "连接失败";
+                statusBadge.className = "connection-status-badge error";
+            }
         }
     });
 }
@@ -336,9 +362,16 @@ function joinRoom() {
 function setupAsClient(hostPeerId) {
     isHost = false;
     // 生成随机 Peer ID
-    peer = new Peer();
+    peer = new Peer(peerConfig);
 
     peer.on("open", (id) => {
+        // 启动连接时，更新连接状态徽章为“连接中”
+        const statusBadge = document.getElementById("connection-status");
+        if (statusBadge) {
+            statusBadge.textContent = "正在连接房主...";
+            statusBadge.className = "connection-status-badge";
+        }
+
         hostConnection = peer.connect(hostPeerId);
 
         hostConnection.on("open", () => {
@@ -347,6 +380,12 @@ function setupAsClient(hostPeerId) {
             gameScreen.classList.add("active");
             displayRoomId.textContent = currentRoomId;
             
+            // 更新连接状态徽章
+            if (statusBadge) {
+                statusBadge.textContent = "已联机 (客端)";
+                statusBadge.className = "connection-status-badge client";
+            }
+
             // 发送加入消息
             hostConnection.send({ type: "join", name: currentUsername });
         });
@@ -365,13 +404,30 @@ function setupAsClient(hostPeerId) {
 
         hostConnection.on("close", () => {
             showToast("房主已关闭房间，返回大厅");
+            if (statusBadge) {
+                statusBadge.textContent = "连接断开";
+                statusBadge.className = "connection-status-badge error";
+            }
             gameScreen.classList.remove("active");
             lobbyScreen.classList.add("active");
+        });
+
+        hostConnection.on("error", (err) => {
+            showToast("与房主的数据链接故障");
+            if (statusBadge) {
+                statusBadge.textContent = "连接故障";
+                statusBadge.className = "connection-status-badge error";
+            }
         });
     });
 
     peer.on("error", (err) => {
-        showToast("无法连接到目标房间，请确认房间号是否正确");
+        showToast("无法解析目标房间号");
+        const statusBadge = document.getElementById("connection-status");
+        if (statusBadge) {
+            statusBadge.textContent = "连接解析错误";
+            statusBadge.className = "connection-status-badge error";
+        }
     });
 }
 

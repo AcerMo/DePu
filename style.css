@@ -201,6 +201,35 @@ body, html {
     font-weight: 600;
 }
 
+.connection-status-badge {
+    margin-left: 8px;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-color);
+    color: var(--text-gray);
+    display: inline-block;
+    vertical-align: middle;
+}
+.connection-status-badge.host {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.connection-status-badge.client {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+.connection-status-badge.error {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+
 .pot-display {
     padding: 6px 20px;
     border-radius: 20px;
