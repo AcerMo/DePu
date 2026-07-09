@@ -747,9 +747,13 @@ function sitDown(seatIdx) {
         if (pokerGame.seats[seatIdx] === null) {
             if (yourSeatIdx !== -1) {
                 pokerGame.removePlayer(yourSeatIdx);
+                delete seatToPeer[yourSeatIdx];
             }
             pokerGame.addPlayer(currentUsername, seatIdx);
             yourSeatIdx = seatIdx;
+            peerToSeat["local-host"] = seatIdx;
+            seatToPeer[seatIdx] = "local-host";
+            peerToName["local-host"] = currentUsername;
             hostBroadcastState();
         }
     } else {
@@ -761,6 +765,8 @@ function standUp() {
     if (isHost && pokerGame) {
         if (yourSeatIdx !== -1) {
             pokerGame.removePlayer(yourSeatIdx);
+            delete seatToPeer[yourSeatIdx];
+            peerToSeat["local-host"] = -1;
             yourSeatIdx = -1;
             hostBroadcastState();
         }
