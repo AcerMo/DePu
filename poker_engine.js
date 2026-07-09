@@ -108,6 +108,36 @@ function evaluate7CardHand(cards) {
     return { score: bestScore, hand: bestHand };
 }
 
+const HAND_NAMES = {
+    9: "同花顺",
+    8: "四条",
+    7: "葫芦",
+    6: "同花",
+    5: "顺子",
+    4: "三条",
+    3: "两对",
+    2: "一对",
+    1: "高牌"
+};
+
+function getHandDescription(holeCards, communityCards) {
+    if (!holeCards || holeCards.length < 2) return "";
+    const validCommunity = (communityCards || []).filter(c => c && c !== "?");
+    const allCards = [...holeCards, ...validCommunity];
+    if (allCards.length < 5) {
+        return "底牌已发";
+    }
+    try {
+        const { score } = evaluate7CardHand(allCards);
+        if (!score) return "分析中...";
+        const rank = score[0];
+        return HAND_NAMES[rank] || "高牌";
+    } catch (e) {
+        console.error("评估手牌出错:", e);
+        return "分析中...";
+    }
+}
+
 // 边池计算与分配
 function resolvePots(playerContributions, activeSeats, foldedSeats, handScores) {
     let contributions = { ...playerContributions };

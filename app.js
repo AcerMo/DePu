@@ -551,6 +551,34 @@ function renderGame() {
 
     // 渲染历史记录
     renderHistoryLogs();
+
+    // 6. 更新我的手牌悬浮显示区
+    const myHandDisplay = document.getElementById("my-hand-display");
+    const myHandCardsContainer = document.getElementById("my-hand-cards-container");
+    const myHandValueBadge = document.getElementById("my-hand-value-badge");
+
+    const myPlayer = yourSeatIdx !== -1 ? localGameState.seats[yourSeatIdx] : null;
+    const isPlaying = myPlayer && myPlayer.status !== "spectator" && myPlayer.status !== "folded";
+    const hasHand = isPlaying && myPlayer.cards && myPlayer.cards.length > 0;
+    const isGameRunning = !["waiting", "ended"].includes(localGameState.round_name);
+
+    if (hasHand && isGameRunning) {
+        myHandDisplay.classList.remove("hidden");
+        myHandCardsContainer.innerHTML = "";
+        
+        myPlayer.cards.forEach(card => {
+            const slot = document.createElement("div");
+            slot.className = "card-slot large";
+            slot.innerHTML = createCardMarkup(card);
+            myHandCardsContainer.appendChild(slot);
+        });
+
+        // 智能评估当前最佳手牌并更新徽章
+        const desc = getHandDescription(myPlayer.cards, localGameState.community_cards);
+        myHandValueBadge.textContent = desc;
+    } else {
+        myHandDisplay.classList.add("hidden");
+    }
 }
 
 function createCardMarkup(card) {

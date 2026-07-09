@@ -6,7 +6,7 @@
     <title>Texas Hold'em - 多人在线德扑</title>
     <!-- Google Fonts: Outfit and Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=2.4">
 </head>
 <body>
 
@@ -77,6 +77,13 @@
             <span id="notifier-text">等待玩家加入...</span>
         </div>
 
+        <!-- 我的手牌悬浮区（仅在玩家坐下且游戏进行时展示，带有智能手牌比对提示） -->
+        <div id="my-hand-display" class="my-hand-display glass hidden">
+            <span class="my-hand-title">我的手牌</span>
+            <div id="my-hand-cards-container" class="my-hand-cards-container"></div>
+            <div id="my-hand-value-badge" class="my-hand-value-badge">分析中...</div>
+        </div>
+
         <!-- 底部控制面板 -->
         <footer class="control-panel glass">
             
@@ -144,7 +151,7 @@
     <div id="toast" class="toast hidden">提示消息</div>
 
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script src="poker_engine.js?v=2.3"></script>
-    <script src="app.js?v=2.3"></script>
+    <script src="poker_engine.js?v=2.4"></script>
+    <script src="app.js?v=2.4"></script>
 </body>
 </html>
