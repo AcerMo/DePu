@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Texas Hold'em - 多人在线德扑</title>
+    <!-- Google Fonts: Outfit and Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 登录与大厅界面 -->
+    <div id="lobby-screen" class="screen active">
+        <div class="lobby-card glass">
+            <h1 class="logo-title">TEXAS HOLD'EM</h1>
+            <p class="logo-subtitle">实时在线德州扑克联机桌</p>
+            
+            <div class="input-group">
+                <label for="username">玩家昵称</label>
+                <input type="text" id="username" placeholder="请输入你的昵称" maxlength="10">
+            </div>
+            
+            <div class="input-group">
+                <label for="room-id">房间号</label>
+                <input type="text" id="room-id" placeholder="输入或创建房间号" value="1001" maxlength="6">
+            </div>
+            
+            <button id="join-btn" class="primary-btn">进入房间</button>
+        </div>
+    </div>
+
+    <!-- 游戏台界面 -->
+    <div id="game-screen" class="screen">
+        
+        <!-- 头部栏：房间号、公共池、状态 -->
+        <header class="game-header">
+            <div class="header-left">
+                <span class="room-badge">房间: <span id="display-room-id">1001</span></span>
+            </div>
+            <div class="header-center">
+                <div class="pot-display glass">
+                    <span class="pot-label">总筹码池</span>
+                    <span id="total-pot-amount" class="pot-value">0</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="stand-btn" class="text-btn">起立旁观</button>
+            </div>
+        </header>
+
+        <!-- 游戏扑克桌体 -->
+        <div class="poker-table-container">
+            <div class="poker-table">
+                <!-- 绒面内环装饰 -->
+                <div class="table-felt">
+                    <!-- 公共牌槽 (5张) -->
+                    <div class="community-cards" id="community-cards-container">
+                        <div class="card-slot card-placeholder" data-index="0"></div>
+                        <div class="card-slot card-placeholder" data-index="1"></div>
+                        <div class="card-slot card-placeholder" data-index="2"></div>
+                        <div class="card-slot card-placeholder" data-index="3"></div>
+                        <div class="card-slot card-placeholder" data-index="4"></div>
+                    </div>
+                </div>
+
+                <!-- 8个座位环形分布 -->
+                <div class="seats-ring" id="seats-container">
+                    <!-- 由 js 动态生成 8 个座位 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 消息通知栏（轮播胜出者或阶段变化） -->
+        <div id="game-notifier" class="game-notifier glass hidden">
+            <span id="notifier-text">等待玩家加入...</span>
+        </div>
+
+        <!-- 底部控制面板 -->
+        <footer class="control-panel glass">
+            
+            <!-- 房间准备与辅助状态面板 -->
+            <div id="setup-panel" class="sub-panel active">
+                <button id="start-game-btn" class="primary-btn pulse-glow hidden">开始游戏</button>
+                <button id="rebuy-btn" class="secondary-btn hidden">补充筹码 ($10000)</button>
+                <div id="spectator-msg" class="info-text">请点击上方桌子上的空位坐下以参与游戏</div>
+            </div>
+
+            <!-- 投注操作控制区 -->
+            <div id="action-panel" class="sub-panel">
+                <!-- 加注快捷滑杆 -->
+                <div class="slider-container" id="raise-slider-container">
+                    <div class="slider-shortcuts">
+                        <button type="button" class="shortcut-btn" id="shortcut-min">最小</button>
+                        <button type="button" class="shortcut-btn" id="shortcut-2x">2x 大盲</button>
+                        <button type="button" class="shortcut-btn" id="shortcut-3x">3x 大盲</button>
+                        <button type="button" class="shortcut-btn" id="shortcut-pot">底池</button>
+                        <button type="button" class="shortcut-btn" id="shortcut-allin">ALL-IN</button>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="raise-range" min="100" max="10000" step="50" value="100">
+                        <span id="raise-val-display" class="raise-bubble">100</span>
+                    </div>
+                </div>
+
+                <!-- 核心四大动作按钮 -->
+                <div class="action-buttons-grid">
+                    <button id="btn-fold" class="action-btn fold-btn">弃牌 (Fold)</button>
+                    <button id="btn-check" class="action-btn check-btn">过牌 (Check)</button>
+                    <button id="btn-call" class="action-btn call-btn">跟注 (Call) <span class="val"></span></button>
+                    <button id="btn-raise" class="action-btn raise-btn">加注 (Raise) <span class="val"></span></button>
+                </div>
+            </div>
+
+        </footer>
+
+        <!-- 聊天和历史记录悬浮侧栏 -->
+        <div id="chat-sidebar" class="chat-sidebar glass">
+            <div class="sidebar-toggle" id="sidebar-toggle-btn">💬 聊天与记录</div>
+            <div class="sidebar-content">
+                <div class="tab-header">
+                    <button class="tab-btn active" data-tab="log-list">牌局日志</button>
+                    <button class="tab-btn" data-tab="chat-list">聊天室</button>
+                </div>
+                <div class="tab-panes">
+                    <div class="tab-pane active" id="log-list">
+                        <!-- 牌局历史记录 -->
+                    </div>
+                    <div class="tab-pane" id="chat-list">
+                        <!-- 聊天信息 -->
+                    </div>
+                </div>
+                <div class="chat-input-bar">
+                    <input type="text" id="chat-input" placeholder="输入聊天内容..." maxlength="30">
+                    <button id="send-chat-btn">发送</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 弹窗提示 -->
+    <div id="toast" class="toast hidden">提示消息</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
