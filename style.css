@@ -22,6 +22,10 @@
     user-select: none;
 }
 
+html {
+    font-size: 14px; /* 全局等比例缩放所有 rem 元素，使界面更紧凑 */
+}
+
 body, html {
     width: 100%;
     height: 100%;
@@ -264,8 +268,10 @@ body, html {
 }
 
 .poker-table {
-    width: 96%;
-    height: 78%;
+    width: 86%;
+    height: 70%;
+    max-width: 720px;
+    max-height: 420px;
     background-color: var(--wood-border);
     border-radius: 120px;
     border: 10px solid #281107;
@@ -386,8 +392,8 @@ body, html {
 /* 座位框 */
 .seat {
     position: absolute;
-    width: 76px;
-    height: 76px;
+    width: 68px;
+    height: 68px;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -397,8 +403,8 @@ body, html {
 
 /* 座位不同状态样式 */
 .player-avatar {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: rgba(15, 23, 42, 0.9);
     border: 2px solid var(--text-gray);
@@ -442,14 +448,14 @@ body, html {
 /* 玩家头像信息 */
 .player-info {
     position: absolute;
-    bottom: -22px;
-    width: 86px;
+    bottom: -32px;
+    width: 90px;
     background: rgba(0, 0, 0, 0.85);
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    padding: 2px;
+    padding: 3px 2px;
     text-align: center;
-    font-size: 0.65rem;
+    font-size: 0.58rem;
     line-height: 1.1;
     pointer-events: none;
 }
