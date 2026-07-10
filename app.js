@@ -443,12 +443,13 @@ function renderGame() {
     // 1. 渲染总底池
     totalPotAmount.textContent = localGameState.total_pot;
 
-    // 2. 渲染 8 个座位
+    // 2. 渲染 8 个座位 (动态旋转，使本地玩家始终位于正下方 seat-0 视角)
     seatsContainer.innerHTML = "";
     for (let i = 0; i < 8; i++) {
         const player = localGameState.seats[i];
         const seatDiv = document.createElement("div");
-        seatDiv.className = `seat seat-${i}`;
+        const visualSeatIndex = yourSeatIdx !== -1 ? (i - yourSeatIdx + 8) % 8 : i;
+        seatDiv.className = `seat seat-${visualSeatIndex}`;
 
         if (!player) {
             // 空闲座位

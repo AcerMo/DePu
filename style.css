@@ -491,43 +491,43 @@ body, html {
 /* 座位角度及标注偏移定位 */
 /* 座位0: 正下方 (Hero 玩家视角) */
 .seat-0 { left: 50%; top: 90%; }
-.seat-0 .player-hand-cards { top: -45px; }
-.seat-0 .bet-display { top: -65px; }
+.seat-0 .player-hand-cards { top: -42px; left: 50%; transform: translateX(-50%); }
+.seat-0 .bet-display { top: -72px; left: 50%; transform: translateX(-50%); }
 
 /* 座位1: 右下 */
 .seat-1 { left: 88%; top: 72%; }
-.seat-1 .player-hand-cards { left: -50px; }
-.seat-1 .bet-display { left: -60px; top: 15px; }
+.seat-1 .player-hand-cards { left: -55px; top: 5px; }
+.seat-1 .bet-display { left: -115px; top: 12px; }
 
 /* 座位2: 右上 */
 .seat-2 { left: 88%; top: 38%; }
-.seat-2 .player-hand-cards { left: -50px; }
-.seat-2 .bet-display { left: -60px; top: 15px; }
+.seat-2 .player-hand-cards { left: -55px; top: 5px; }
+.seat-2 .bet-display { left: -115px; top: 12px; }
 
 /* 座位3: 上偏右 */
 .seat-3 { left: 68%; top: 10%; }
-.seat-3 .player-hand-cards { bottom: -45px; }
-.seat-3 .bet-display { bottom: -65px; }
+.seat-3 .player-hand-cards { bottom: -42px; left: 50%; transform: translateX(-50%); }
+.seat-3 .bet-display { bottom: -72px; left: 50%; transform: translateX(-50%); }
 
 /* 座位4: 正上方 */
 .seat-4 { left: 50%; top: 10%; }
-.seat-4 .player-hand-cards { bottom: -45px; }
-.seat-4 .bet-display { bottom: -65px; }
+.seat-4 .player-hand-cards { bottom: -42px; left: 50%; transform: translateX(-50%); }
+.seat-4 .bet-display { bottom: -72px; left: 50%; transform: translateX(-50%); }
 
 /* 座位5: 上偏左 */
 .seat-5 { left: 32%; top: 10%; }
-.seat-5 .player-hand-cards { bottom: -45px; }
-.seat-5 .bet-display { bottom: -65px; }
+.seat-5 .player-hand-cards { bottom: -42px; left: 50%; transform: translateX(-50%); }
+.seat-5 .bet-display { bottom: -72px; left: 50%; transform: translateX(-50%); }
 
 /* 座位6: 左上 */
 .seat-6 { left: 12%; top: 38%; }
-.seat-6 .player-hand-cards { right: -50px; }
-.seat-6 .bet-display { right: -60px; top: 15px; }
+.seat-6 .player-hand-cards { right: -55px; top: 5px; }
+.seat-6 .bet-display { right: -115px; top: 12px; }
 
 /* 座位7: 左下 */
 .seat-7 { left: 12%; top: 72%; }
-.seat-7 .player-hand-cards { right: -50px; }
-.seat-7 .bet-display { right: -60px; top: 15px; }
+.seat-7 .player-hand-cards { right: -55px; top: 5px; }
+.seat-7 .bet-display { right: -115px; top: 12px; }
 
 /* 庄家、盲注角标指示 */
 .dealer-button, .blind-badge {
