@@ -365,7 +365,7 @@ class PokerGame {
             p.chips_in_round = p.chips;
             p.chips = 0;
             p.status = "all-in";
-            this.addHistory(`${p.name} 筹码不足，强制 All-in 盲注 ${p.chips_in_pot}`);
+            this.addHistory(`${p.name} 哈夫币不足，强制 All-in 盲注 ${p.chips_in_pot}`);
         } else {
             p.chips -= amount;
             p.chips_in_pot = amount;
@@ -412,7 +412,7 @@ class PokerGame {
                 p.chips_in_round += actualCall;
                 p.chips = 0;
                 p.status = "all-in";
-                this.addHistory(`玩家 ${p.name} 筹码不足，All-in 跟注 ${actualCall}`);
+                this.addHistory(`玩家 ${p.name} 哈夫币不足，All-in 跟注 ${actualCall}`);
             } else {
                 p.chips -= callAmount;
                 p.chips_in_pot += callAmount;
@@ -440,7 +440,7 @@ class PokerGame {
                     this.current_bet = actualRaise;
                     this.last_raiser = seatIdx;
                 }
-                this.addHistory(`玩家 ${p.name} 筹码不足，All-in 加注到 ${actualRaise}`);
+                this.addHistory(`玩家 ${p.name} 哈夫币不足，All-in 加注到 ${actualRaise}`);
             } else {
                 p.chips -= needed;
                 p.chips_in_pot += needed;
@@ -555,7 +555,7 @@ class PokerGame {
         
         this.round_name = "ended";
         this.winners = [winnerIdx];
-        this.win_messages = [`所有人都弃牌，${winner.name} 赢取筹码池 ${totalPot}`];
+        this.win_messages = [`所有人都弃牌，${winner.name} 赢取哈夫币池 ${totalPot}`];
         this.addHistory(this.win_messages[0]);
         this.current_turn = -1;
     }
@@ -608,7 +608,7 @@ class PokerGame {
                     const handDesc = handNames[rankScore] || "高牌";
                     winDetails.append ? winDetails.push(`${p.name} (${handDesc}) 赢取 ${winAmt}`) : winDetails.push(`${p.name} (${handDesc}) 赢取 ${winAmt}`);
                 } else {
-                    winDetails.push(`${p.name} 赢回退还筹码 ${winAmt}`);
+                    winDetails.push(`${p.name} 赢回退还哈夫币 ${winAmt}`);
                 }
             }
         }

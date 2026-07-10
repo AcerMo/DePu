@@ -756,143 +756,98 @@ body, html {
     text-align: center;
 }
 
-/* 聊天与历史日志侧栏 */
-.chat-sidebar {
+/* 活动中玩家的桌上指示灯 */
+.active-turn-indicator {
     position: absolute;
-    right: 0;
-    bottom: 95px;
-    width: 250px;
-    height: 250px;
-    border-radius: 16px 0 0 16px;
-    display: flex;
-    flex-direction: column;
-    z-index: 110;
-    transform: translateX(210px);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.chat-sidebar.open {
-    transform: translateX(0);
-}
-
-.sidebar-toggle {
-    position: absolute;
-    left: -40px;
-    top: 10px;
-    width: 40px;
-    height: 110px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-right: none;
-    border-radius: 12px 0 0 12px;
-    writing-mode: vertical-lr;
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--primary);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: auto;
-}
-
-.sidebar-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.tab-header {
-    display: flex;
-    height: 36px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.tab-btn {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--text-gray);
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.tab-btn.active {
-    color: var(--primary);
-    border-bottom: 2px solid var(--primary);
-}
-
-.tab-panes {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-}
-
-.tab-pane {
-    display: none;
-    height: 100%;
-}
-
-.tab-pane.active {
-    display: block;
-}
-
-#log-list, #chat-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.7rem;
-    overflow-y: auto;
-    height: 150px;
-}
-
-.log-item {
-    color: #cbd5e1;
-    padding-bottom: 2px;
-    border-bottom: 1px dashed rgba(255,255,255,0.03);
-}
-
-.chat-item {
-    line-height: 1.2;
-}
-
-.chat-item .sender {
-    color: var(--primary);
-    font-weight: 700;
-    margin-right: 4px;
-}
-
-.chat-input-bar {
-    display: flex;
-    padding: 6px;
-    border-top: 1px solid var(--border-color);
-    background: rgba(0,0,0,0.2);
-}
-
-.chat-input-bar input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    color: #fff;
-    padding: 4px 8px;
-    font-size: 0.7rem;
-    outline: none;
-}
-
-.chat-input-bar button {
-    background: var(--primary);
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary) 0%, #d97706 100%);
     color: #000;
-    border: none;
-    border-radius: 6px;
-    padding: 4px 10px;
-    margin-left: 4px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    cursor: pointer;
+    font-size: 0.55rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--primary);
+    white-space: nowrap;
+    animation: bounceIndicator 0.8s infinite alternate ease-in-out;
+    z-index: 30;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes bounceIndicator {
+    from { transform: translateX(-50%) translateY(0); }
+    to { transform: translateX(-50%) translateY(-4px); }
+}
+
+/* 轮到行动的玩家头像框发光特效 */
+.seat.active .player-avatar {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 20px var(--primary), inset 0 0 8px var(--primary) !important;
+    animation: activeAvatarPulse 1.5s infinite ease-in-out !important;
+    transform: scale(1.06);
+    z-index: 25;
+}
+
+@keyframes activeAvatarPulse {
+    0% { box-shadow: 0 0 10px var(--primary), inset 0 0 4px var(--primary); }
+    50% { box-shadow: 0 0 25px var(--primary), inset 0 0 12px var(--primary); }
+    100% { box-shadow: 0 0 10px var(--primary), inset 0 0 4px var(--primary); }
+}
+
+/* 不同尺寸扑克牌面印花字体等比例优化（解决印花大小失调问题） */
+
+/* 1. 桌面公共牌（中等尺寸） */
+.card-slot {
+    width: 40px;
+    height: 56px;
+}
+.card-slot .poker-card {
+    padding: 3px !important;
+    border-radius: 5px !important;
+    font-size: 0.8rem !important;
+}
+.card-slot .poker-card .card-suit-big {
+    font-size: 1.25rem !important;
+    margin-bottom: 2px !important;
+}
+.card-slot .poker-card .card-corner {
+    line-height: 0.85 !important;
+}
+
+/* 2. 我的手牌内联展示（较大尺寸） */
+.my-hand-panel-inline .card-slot.large {
+    width: 32px;
+    height: 44px;
+}
+.my-hand-panel-inline .card-slot.large .poker-card {
+    padding: 2px 3px !important;
+    border-radius: 4px !important;
+    font-size: 0.75rem !important;
+}
+.my-hand-panel-inline .card-slot.large .poker-card .card-suit-big {
+    font-size: 1.05rem !important;
+    margin-bottom: 2px !important;
+}
+.my-hand-panel-inline .card-slot.large .poker-card .card-corner {
+    line-height: 0.85 !important;
+}
+
+/* 3. 玩家头像上的小手牌（微缩尺寸） */
+.player-hand-cards .poker-card, 
+.player-hand-cards .card-back {
+    width: 25px !important;
+    height: 35px !important;
+    font-size: 0.65rem !important;
+    padding: 2px !important;
+    border-radius: 3px !important;
+}
+.player-hand-cards .poker-card .card-suit-big {
+    font-size: 0.75rem !important;
+    margin-bottom: 1px !important;
+}
+.player-hand-cards .poker-card .card-corner {
+    line-height: 0.75 !important;
 }
 
 /* Toast提示 */
@@ -1022,42 +977,43 @@ body, html {
     color: var(--primary) !important;
 }
 
-/* 头像上的手牌微型化排布，防止因绝对定位相互重叠 */
+/* 头像上微缩手牌容器样式 */
 .player-hand-cards {
     position: absolute;
     display: flex;
-    gap: 4px;
+    gap: 3px;
     pointer-events: none;
     z-index: 20;
     justify-content: center;
     align-items: center;
 }
 
+/* 头像上微缩牌（微缩比例尺寸） */
 .player-hand-cards .poker-card, 
 .player-hand-cards .card-back {
-    position: relative !important; /* 覆盖原本的 absolute，让 flex 生效并排排列 */
-    width: 29px !important;
-    height: 40px !important;
-    font-size: 0.7rem !important;
+    position: relative !important;
+    width: 25px !important;
+    height: 35px !important;
+    font-size: 0.65rem !important;
     font-weight: 800 !important;
-    padding: 2px 3px !important;
-    border-radius: 4px !important;
+    padding: 2px !important;
+    border-radius: 3px !important;
     box-shadow: 0 3px 6px rgba(0,0,0,0.4) !important;
-    animation: none !important; /* 禁用小头像牌的飞牌动画，避免乱飞 */
+    animation: none !important;
     top: auto !important;
     left: auto !important;
 }
 
 .player-hand-cards .poker-card .card-suit-big {
-    font-size: 0.9rem !important;
-    margin-bottom: 2px !important;
+    font-size: 0.75rem !important;
+    margin-bottom: 1px !important;
 }
 
 .player-hand-cards .poker-card .card-corner {
-    line-height: 0.8 !important;
+    line-height: 0.75 !important;
 }
 
-/* 我的手牌 - 内嵌式信息状态条 */
+/* 我的手牌 - 内联式信息状态条 */
 .my-hand-panel-inline {
     display: flex;
     align-items: center;
@@ -1082,17 +1038,17 @@ body, html {
     gap: 6px;
 }
 
-/* 牌槽大小（内联显示，紧凑防遮挡） */
-.card-slot.large {
+/* 我的手牌内联展示牌（大尺寸） */
+.my-hand-panel-inline .card-slot.large {
     position: relative;
     width: 32px;
-    height: 46px;
+    height: 44px;
     perspective: 500px;
 }
 
-.card-slot.large .poker-card {
+.my-hand-panel-inline .card-slot.large .poker-card {
     border-radius: 4px !important;
-    padding: 3px !important;
+    padding: 2px 3px !important;
     font-size: 0.75rem !important;
     box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
     position: absolute;
@@ -1102,13 +1058,13 @@ body, html {
     left: 0;
 }
 
-.card-slot.large .poker-card .card-suit-big {
-    font-size: 1.1rem !important;
+.my-hand-panel-inline .card-slot.large .poker-card .card-suit-big {
+    font-size: 1.05rem !important;
     margin-bottom: 2px !important;
 }
 
-.card-slot.large .poker-card .card-corner {
-    line-height: 0.8 !important;
+.my-hand-panel-inline .card-slot.large .poker-card .card-corner {
+    line-height: 0.85 !important;
 }
 
 /* 手牌智能牌型指示徽章 */

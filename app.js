@@ -88,27 +88,7 @@ standBtn.addEventListener("click", standUp);
 startGameBtn.addEventListener("click", startGame);
 rebuyBtn.addEventListener("click", rebuyChips);
 
-// 侧栏与选项卡切换
-sidebarToggleBtn.addEventListener("click", () => {
-    chatSidebar.classList.toggle("open");
-});
 
-document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-        
-        e.target.classList.add("active");
-        const paneId = e.target.getAttribute("data-tab");
-        document.getElementById(paneId).classList.add("active");
-    });
-});
-
-// 发送聊天
-sendChatBtn.addEventListener("click", sendChatMessage);
-chatInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendChatMessage();
-});
 
 // 绑定四大下注动作
 btnFold.addEventListener("click", () => sendPlayerAction("fold"));
@@ -122,7 +102,7 @@ btnRaise.addEventListener("click", () => {
 // 滑块值监听
 raiseRange.addEventListener("input", (e) => {
     raiseValDisplay.textContent = e.target.value;
-    btnRaise.querySelector(".val").textContent = `$${e.target.value}`;
+    btnRaise.querySelector(".val").textContent = `${e.target.value} 哈夫币`;
 });
 
 // 滑块快捷操作
@@ -492,6 +472,12 @@ function renderGame() {
             if (localGameState.sb_idx === i) badgeHtml += `<div class="blind-badge sb">S</div>`;
             if (localGameState.bb_idx === i) badgeHtml += `<div class="blind-badge bb">B</div>`;
 
+            // 行动中桌上指示物
+            let turnIndicatorHtml = "";
+            if (localGameState.current_turn === i) {
+                turnIndicatorHtml = `<div class="active-turn-indicator">行动中</div>`;
+            }
+
             // 弃牌与 All-in 状态角标
             let statusHtml = "";
             if (player.status === "folded") {
@@ -513,18 +499,20 @@ function renderGame() {
             // 下注额
             let betHtml = "";
             if (player.chips_in_round > 0) {
-                betHtml = `<div class="bet-display">$${player.chips_in_round}</div>`;
+                betHtml = `<div class="bet-display">${player.chips_in_round} 哈夫币</div>`;
             }
 
             seatDiv.innerHTML = `
                 ${badgeHtml}
+                ${turnIndicatorHtml}
                 <div class="player-avatar">
                     <span>${player.name.substring(0, 2)}</span>
                     ${statusHtml}
                 </div>
                 <div class="player-info">
                     <div class="player-name">${displayName}</div>
-                    <div class="player-chips">$${player.chips}</div>
+                    <div class="player-chips">${player.chips} 哈夫币</div>
+                    <div class="player-bet-total">已注: ${player.chips_in_pot} 哈夫币</div>
                 </div>
                 ${cardsHtml}
                 ${betHtml}
@@ -606,6 +594,7 @@ function createCardMarkup(card) {
 }
 
 function updateNotifier() {
+    if (!gameNotifier || !notifierText) return;
     const round = localGameState.round_name;
     gameNotifier.classList.remove("hidden");
 
@@ -682,10 +671,10 @@ function updateControlPanel() {
         btnCall.querySelector(".val").textContent = "";
         btnCall.disabled = true;
     } else if (myChips <= callAmount) {
-        btnCall.querySelector(".val").textContent = `ALL-IN ($${myChips})`;
+        btnCall.querySelector(".val").textContent = `ALL-IN (${myChips} 哈夫币)`;
         btnCall.disabled = false;
     } else {
-        btnCall.querySelector(".val").textContent = `$${callAmount}`;
+        btnCall.querySelector(".val").textContent = `${callAmount} 哈夫币`;
         btnCall.disabled = false;
     }
 
@@ -709,7 +698,7 @@ function updateControlPanel() {
         }
         
         raiseValDisplay.textContent = raiseRange.value;
-        btnRaise.querySelector(".val").textContent = `$${raiseRange.value}`;
+        btnRaise.querySelector(".val").textContent = `${raiseRange.value} 哈夫币`;
     }
 }
 
@@ -730,7 +719,7 @@ function updateRaiseSlider(value) {
 
     raiseRange.value = target;
     raiseValDisplay.textContent = target;
-    btnRaise.querySelector(".val").textContent = `$${target}`;
+    btnRaise.querySelector(".val").textContent = `${target} 哈夫币`;
 }
 
 // 统一行动包分发
@@ -793,6 +782,7 @@ function sendPlayerAction(actionType, amount = 0) {
 }
 
 function sendChatMessage() {
+    if (!chatInput) return;
     const text = chatInput.value.trim();
     if (text) {
         if (isHost) {
@@ -806,6 +796,7 @@ function sendChatMessage() {
 
 // 渲染历史数据日志
 function renderHistoryLogs() {
+    if (!logPane) return;
     logPane.innerHTML = "";
     localGameState.history.forEach(log => {
         const item = document.createElement("div");
@@ -817,6 +808,7 @@ function renderHistoryLogs() {
 }
 
 function appendChat(sender, message) {
+    if (!chatPane) return;
     const item = document.createElement("div");
     item.className = "chat-item";
     item.innerHTML = `<span class="sender">${sender}:</span><span class="msg-text">${message}</span>`;

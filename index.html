@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Texas Hold'em - 多人在线德扑</title>
+    <title>多人在线益智小游戏</title>
     <!-- Google Fonts: Outfit and Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2.7">
+    <link rel="stylesheet" href="style.css?v=2.9">
 </head>
 <body>
 
     <!-- 登录与大厅界面 -->
     <div id="lobby-screen" class="screen active">
         <div class="lobby-card glass">
-            <h1 class="logo-title">TEXAS HOLD'EM</h1>
-            <p class="logo-subtitle">实时在线德州扑克联机桌</p>
+            <h1 class="logo-title">益智小游戏</h1>
+            <p class="logo-subtitle">实时在线益智联机桌</p>
             
             <div class="input-group">
                 <label for="username">玩家昵称</label>
@@ -41,7 +41,7 @@
             </div>
             <div class="header-center">
                 <div class="pot-display glass">
-                    <span class="pot-label">总筹码池</span>
+                    <span class="pot-label">总哈夫币池</span>
                     <span id="total-pot-amount" class="pot-value">0</span>
                 </div>
             </div>
@@ -72,10 +72,7 @@
             </div>
         </div>
 
-        <!-- 消息通知栏（轮播胜出者或阶段变化） -->
-        <div id="game-notifier" class="game-notifier glass hidden">
-            <span id="notifier-text">等待玩家加入...</span>
-        </div>
+
 
         <!-- 底部控制面板 -->
         <footer class="control-panel glass">
@@ -89,7 +86,7 @@
             <!-- 房间准备与辅助状态面板 -->
             <div id="setup-panel" class="sub-panel active">
                 <button id="start-game-btn" class="primary-btn pulse-glow hidden">开始游戏</button>
-                <button id="rebuy-btn" class="secondary-btn hidden">补充筹码 ($10000)</button>
+                <button id="rebuy-btn" class="secondary-btn hidden">补充哈夫币 (10000)</button>
                 <div id="spectator-msg" class="info-text">请点击上方桌子上的空位坐下以参与游戏</div>
             </div>
 
@@ -121,28 +118,7 @@
 
         </footer>
 
-        <!-- 聊天和历史记录悬浮侧栏 -->
-        <div id="chat-sidebar" class="chat-sidebar glass">
-            <div class="sidebar-toggle" id="sidebar-toggle-btn">💬 聊天与记录</div>
-            <div class="sidebar-content">
-                <div class="tab-header">
-                    <button class="tab-btn active" data-tab="log-list">牌局日志</button>
-                    <button class="tab-btn" data-tab="chat-list">聊天室</button>
-                </div>
-                <div class="tab-panes">
-                    <div class="tab-pane active" id="log-list">
-                        <!-- 牌局历史记录 -->
-                    </div>
-                    <div class="tab-pane" id="chat-list">
-                        <!-- 聊天信息 -->
-                    </div>
-                </div>
-                <div class="chat-input-bar">
-                    <input type="text" id="chat-input" placeholder="输入聊天内容..." maxlength="30">
-                    <button id="send-chat-btn">发送</button>
-                </div>
-            </div>
-        </div>
+
 
     </div>
 
@@ -150,7 +126,7 @@
     <div id="toast" class="toast hidden">提示消息</div>
 
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script src="poker_engine.js?v=2.7"></script>
-    <script src="app.js?v=2.7"></script>
+    <script src="poker_engine.js?v=2.9"></script>
+    <script src="app.js?v=2.9"></script>
 </body>
 </html>
