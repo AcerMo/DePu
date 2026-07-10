@@ -487,9 +487,11 @@ function renderGame() {
                 statusHtml = `<div class="status-badge all-in">ALL IN</div>`;
             }
 
-            // 渲染手牌
+            // 渲染手牌 (仅自己视角下自己的手牌，或结算摊牌阶段展示，平时不显示除自己外任何人的手牌/牌背)
             let cardsHtml = "";
-            if (player.status !== "spectator" && player.status !== "folded" && player.cards && player.cards.length > 0) {
+            const isMe = (i === yourSeatIdx);
+            const isShowdown = player.show_cards;
+            if (player.status !== "spectator" && player.status !== "folded" && player.cards && player.cards.length > 0 && (isMe || isShowdown)) {
                 cardsHtml = `<div class="player-hand-cards">`;
                 player.cards.forEach(card => {
                     cardsHtml += createCardMarkup(card);
