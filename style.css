@@ -809,57 +809,22 @@ body, html {
 
 /* 不同尺寸扑克牌面印花字体等比例优化（解决印花大小失调问题） */
 
-/* 1. 桌面公共牌（中等尺寸） */
+/* 1. 桌面公共牌（中等尺寸 - 放大版） */
 .card-slot {
-    width: 40px;
-    height: 56px;
+    width: 44px;
+    height: 60px;
 }
 .card-slot .poker-card {
     padding: 3px !important;
     border-radius: 5px !important;
-    font-size: 0.8rem !important;
+    font-size: 0.85rem !important;
 }
 .card-slot .poker-card .card-suit-big {
-    font-size: 1.25rem !important;
+    font-size: 1.35rem !important;
     margin-bottom: 2px !important;
 }
 .card-slot .poker-card .card-corner {
     line-height: 0.85 !important;
-}
-
-/* 2. 我的手牌内联展示（较大尺寸） */
-.my-hand-panel-inline .card-slot.large {
-    width: 32px;
-    height: 44px;
-}
-.my-hand-panel-inline .card-slot.large .poker-card {
-    padding: 2px 3px !important;
-    border-radius: 4px !important;
-    font-size: 0.75rem !important;
-}
-.my-hand-panel-inline .card-slot.large .poker-card .card-suit-big {
-    font-size: 1.05rem !important;
-    margin-bottom: 2px !important;
-}
-.my-hand-panel-inline .card-slot.large .poker-card .card-corner {
-    line-height: 0.85 !important;
-}
-
-/* 3. 玩家头像上的小手牌（微缩尺寸） */
-.player-hand-cards .poker-card, 
-.player-hand-cards .card-back {
-    width: 25px !important;
-    height: 35px !important;
-    font-size: 0.65rem !important;
-    padding: 2px !important;
-    border-radius: 3px !important;
-}
-.player-hand-cards .poker-card .card-suit-big {
-    font-size: 0.75rem !important;
-    margin-bottom: 1px !important;
-}
-.player-hand-cards .poker-card .card-corner {
-    line-height: 0.75 !important;
 }
 
 /* Toast提示 */
@@ -1000,13 +965,13 @@ body, html {
     align-items: center;
 }
 
-/* 头像上微缩牌（微缩比例尺寸） */
+/* 头像上微缩牌（微缩比例尺寸 - 放大版） */
 .player-hand-cards .poker-card, 
 .player-hand-cards .card-back {
     position: relative !important;
-    width: 25px !important;
-    height: 35px !important;
-    font-size: 0.65rem !important;
+    width: 28px !important;
+    height: 38px !important;
+    font-size: 0.7rem !important;
     font-weight: 800 !important;
     padding: 2px !important;
     border-radius: 3px !important;
@@ -1017,7 +982,7 @@ body, html {
 }
 
 .player-hand-cards .poker-card .card-suit-big {
-    font-size: 0.75rem !important;
+    font-size: 0.85rem !important;
     margin-bottom: 1px !important;
 }
 
@@ -1050,18 +1015,18 @@ body, html {
     gap: 6px;
 }
 
-/* 我的手牌内联展示牌（大尺寸） */
+/* 我的手牌内联展示牌（大尺寸 - 放大版） */
 .my-hand-panel-inline .card-slot.large {
     position: relative;
-    width: 32px;
-    height: 44px;
+    width: 38px;
+    height: 52px;
     perspective: 500px;
 }
 
 .my-hand-panel-inline .card-slot.large .poker-card {
     border-radius: 4px !important;
     padding: 2px 3px !important;
-    font-size: 0.75rem !important;
+    font-size: 0.85rem !important;
     box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
     position: absolute;
     width: 100%;
@@ -1071,7 +1036,7 @@ body, html {
 }
 
 .my-hand-panel-inline .card-slot.large .poker-card .card-suit-big {
-    font-size: 1.05rem !important;
+    font-size: 1.2rem !important;
     margin-bottom: 2px !important;
 }
 

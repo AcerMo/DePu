@@ -502,12 +502,6 @@ function renderGame() {
             if (localGameState.sb_idx === i) badgeHtml += `<div class="blind-badge sb">S</div>`;
             if (localGameState.bb_idx === i) badgeHtml += `<div class="blind-badge bb">B</div>`;
 
-            // 行动中桌上指示物
-            let turnIndicatorHtml = "";
-            if (localGameState.current_turn === i) {
-                turnIndicatorHtml = `<div class="active-turn-indicator">行动中</div>`;
-            }
-
             // 弃牌与 All-in 状态角标
             let statusHtml = "";
             if (player.status === "folded") {
@@ -536,7 +530,6 @@ function renderGame() {
 
             seatDiv.innerHTML = `
                 ${badgeHtml}
-                ${turnIndicatorHtml}
                 <div class="player-avatar">
                     <span>${player.name.substring(0, 2)}</span>
                     ${statusHtml}
