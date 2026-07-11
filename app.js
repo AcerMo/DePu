@@ -15,6 +15,7 @@ let currentRoomId = "";
 let currentUsername = "";
 let yourSeatIdx = -1;
 let localGameState = null;
+let lastHandRoundEnded = false;
 
 // 全局捕获 JavaScript 运行异常并输出到日志，方便用户排查
 window.onerror = function(message, source, lineno, colno, error) {
@@ -372,54 +373,82 @@ function setupAsClient(hostPeerId) {
         }
         appendChat("系统", `我的临时ID为 ${id}，正在尝试直连房主...`);
 
-        hostConnection = peer.connect(hostPeerId);
+        let connectTimeout = null;
+        let retryCount = 0;
 
-        hostConnection.on("open", () => {
-            showToast("成功连接到房间");
-            lobbyScreen.classList.remove("active");
-            gameScreen.classList.add("active");
-            displayRoomId.textContent = currentRoomId;
+        function performConnect() {
+            if (connectTimeout) clearTimeout(connectTimeout);
             
-            // 更新连接状态徽章
-            if (statusBadge) {
-                statusBadge.textContent = "已联机 (客端)";
-                statusBadge.className = "connection-status-badge client";
-            }
-            appendChat("系统", "连接成功！正在向房主投递加入请求...");
+            appendChat("系统", `正在进行第 ${retryCount + 1} 次直连房主尝试...`);
+            hostConnection = peer.connect(hostPeerId);
 
-            // 发送加入消息
-            hostConnection.send({ type: "join", name: currentUsername });
-        });
+            hostConnection.on("open", () => {
+                if (connectTimeout) clearTimeout(connectTimeout);
+                showToast("成功连接到房间");
+                lobbyScreen.classList.remove("active");
+                gameScreen.classList.add("active");
+                displayRoomId.textContent = currentRoomId;
+                
+                // 更新连接状态徽章
+                if (statusBadge) {
+                    statusBadge.textContent = "已联机 (客端)";
+                    statusBadge.className = "connection-status-badge client";
+                }
+                appendChat("系统", "连接成功！正在向房主投递加入请求...");
 
-        hostConnection.on("data", (packet) => {
-            if (packet.type === "state") {
-                localGameState = packet.data;
-                yourSeatIdx = packet.your_seat;
-                renderGame();
-            } else if (packet.type === "chat") {
-                appendChat(packet.sender, packet.message);
-            } else if (packet.type === "error") {
-                showToast(packet.message);
-            }
-        });
+                // 发送加入消息
+                hostConnection.send({ type: "join", name: currentUsername });
+            });
 
-        hostConnection.on("close", () => {
-            showToast("房主已关闭房间，返回大厅");
-            if (statusBadge) {
-                statusBadge.textContent = "连接断开";
-                statusBadge.className = "connection-status-badge error";
-            }
-            gameScreen.classList.remove("active");
-            lobbyScreen.classList.add("active");
-        });
+            hostConnection.on("data", (packet) => {
+                if (packet.type === "state") {
+                    localGameState = packet.data;
+                    yourSeatIdx = packet.your_seat;
+                    renderGame();
+                } else if (packet.type === "chat") {
+                    appendChat(packet.sender, packet.message);
+                } else if (packet.type === "error") {
+                    showToast(packet.message);
+                }
+            });
 
-        hostConnection.on("error", (err) => {
-            showToast("与房主的数据链接故障");
-            if (statusBadge) {
-                statusBadge.textContent = "连接故障";
-                statusBadge.className = "connection-status-badge error";
-            }
-        });
+            hostConnection.on("close", () => {
+                if (connectTimeout) clearTimeout(connectTimeout);
+                showToast("房主已关闭房间，返回大厅");
+                if (statusBadge) {
+                    statusBadge.textContent = "连接断开";
+                    statusBadge.className = "connection-status-badge error";
+                }
+                gameScreen.classList.remove("active");
+                lobbyScreen.classList.add("active");
+            });
+
+            hostConnection.on("error", (err) => {
+                console.error("与房主的数据链接故障:", err);
+            });
+
+            // 设置 8 秒连接建立超时，超时则自动重试，至多 5 次
+            connectTimeout = setTimeout(() => {
+                if (hostConnection && !hostConnection.open) {
+                    retryCount++;
+                    if (retryCount < 5) {
+                        appendChat("系统", "连接响应超时，正在重连房主...");
+                        showToast("连接超时，正在重试...");
+                        hostConnection.close();
+                        performConnect();
+                    } else {
+                        showToast("无法连接到房主，请核对房间号并检查双方网络");
+                        appendChat("系统", "重试多次均无法联机，请确认房主端已经开启房间且处于联机状态。");
+                        if (statusBadge) {
+                            statusBadge.textContent = "连接超时";
+                            statusBadge.className = "connection-status-badge error";
+                        }
+                    }
+                }
+            }, 8000);
+        }
+
+        performConnect();
     });
 
     peer.on("error", (err) => {
@@ -540,6 +569,32 @@ function renderGame() {
 
     // 4. 更新系统通知条
     updateNotifier();
+
+    // 4.5. 结算胜出者大卡牌弹窗逻辑 (显示 2 秒后自动隐藏)
+    if (localGameState.round_name === "ended") {
+        if (!lastHandRoundEnded) {
+            lastHandRoundEnded = true;
+            const winnerNames = localGameState.winners.map(idx => {
+                const p = localGameState.seats[idx];
+                return p ? p.name : "";
+            }).filter(name => name !== "").join(" & ");
+            
+            const winnerPopup = document.getElementById("winner-popup");
+            if (winnerPopup && winnerNames) {
+                winnerPopup.innerHTML = `<div class="winner-popup-content">🎉 ${winnerNames} WIN!! 🎉</div>`;
+                winnerPopup.classList.remove("hidden");
+                setTimeout(() => {
+                    winnerPopup.classList.add("hidden");
+                }, 2000);
+            }
+        }
+    } else {
+        lastHandRoundEnded = false;
+        const winnerPopup = document.getElementById("winner-popup");
+        if (winnerPopup) {
+            winnerPopup.classList.add("hidden");
+        }
+    }
 
     // 5. 更新控制面板
     updateControlPanel();
